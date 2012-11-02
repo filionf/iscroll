@@ -126,7 +126,7 @@ var m = Math,
 
 			// Events
 			onRefresh: null,
-			onBeforeScrollStart: function (e) { e.preventDefault(); },
+			onBeforeScrollStart: function (e) { /* e.preventDefault(); */},
 			onScrollStart: null,
 			onBeforeScrollMove: null,
 			onScrollMove: null,
@@ -229,7 +229,8 @@ iScroll.prototype = {
 		if (!that[dir + 'Scrollbar']) {
 			if (that[dir + 'ScrollbarWrapper']) {
 				if (hasTransform) that[dir + 'ScrollbarIndicator'].style[transform] = '';
-				that[dir + 'ScrollbarWrapper'].parentNode.removeChild(that[dir + 'ScrollbarWrapper']);
+				if (that[dir + 'ScrollbarWrapper'].parentNode)
+					that[dir + 'ScrollbarWrapper'].parentNode.removeChild(that[dir + 'ScrollbarWrapper']);
 				that[dir + 'ScrollbarWrapper'] = null;
 				that[dir + 'ScrollbarIndicator'] = null;
 			}
@@ -612,6 +613,7 @@ iScroll.prototype = {
 			if (m.abs(distX) < that.options.snapThreshold && m.abs(distY) < that.options.snapThreshold) that.scrollTo(that.absStartX, that.absStartY, 200);
 			else {
 				snap = that._snap(that.x, that.y);
+				if (that.options.snapDuration) { snap.time = Math.min(snap.time, that.options.snapDuration); }
 				if (snap.x != that.x || snap.y != that.y) that.scrollTo(snap.x, snap.y, snap.time);
 			}
 
